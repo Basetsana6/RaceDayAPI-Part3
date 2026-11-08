@@ -5,6 +5,29 @@ var builder = WebApplication.CreateBuilder(args);
 // Add MVC services.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddHttpClient<RaceDayApiService>(client =>
+{
+    client.BaseAddress = new Uri(
+        builder.Configuration["ApiSettings:BaseUrl"]!);
+});
+
+builder.Services.AddHttpClient<AuthenticationServices>(client =>
+{
+    client.BaseAddress = new Uri(
+        builder.Configuration["ApiSettings:BaseUrl"]!);
+});
+
+builder.Services.AddHttpClient<EventService>(client =>
+{
+    client.BaseAddress = new Uri(
+        builder.Configuration["ApiSettings:BaseUrl"]!);
+});
+
+builder.Services.AddHttpClient<ResultsService>(client =>
+{
+    client.BaseAddress = new Uri(
+        builder.Configuration["ApiSettings:BaseUrl"]!);
+});
 // Register HttpClient to communicate with RaceDayAPI.
 builder.Services.AddHttpClient<RaceDayApiService>(client =>
 {
