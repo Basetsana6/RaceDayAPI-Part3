@@ -2,8 +2,16 @@ using RaceDayMVC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add MVC services.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 builder.Services.AddHttpClient<RaceDayApiService>(client =>
 {
@@ -28,8 +36,14 @@ builder.Services.AddHttpClient<ResultsService>(client =>
     client.BaseAddress = new Uri(
         builder.Configuration["ApiSettings:BaseUrl"]!);
 });
-// Register HttpClient to communicate with RaceDayAPI.
-builder.Services.AddHttpClient<RaceDayApiService>(client =>
+
+builder.Services.AddHttpClient<ParticipantService>(client =>
+{
+    client.BaseAddress = new Uri(
+        builder.Configuration["ApiSettings:BaseUrl"]!);
+});
+
+builder.Services.AddHttpClient<ImageService>(client =>
 {
     client.BaseAddress = new Uri(
         builder.Configuration["ApiSettings:BaseUrl"]!);
@@ -37,7 +51,6 @@ builder.Services.AddHttpClient<RaceDayApiService>(client =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -48,6 +61,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();
 
 app.UseAuthorization();
 
