@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
 
 namespace RaceDayMVC.Services
 {
@@ -12,12 +11,26 @@ namespace RaceDayMVC.Services
             _httpClient = httpClient;
         }
 
-        public async Task<string> GetResultsAsync()
+        public async Task<List<RaceResultViewModel>> GetResultsAsync()
         {
-            var response = await _httpClient.GetAsync("api/results");
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadAsStringAsync();
+            return await _httpClient.GetFromJsonAsync<List<RaceResultViewModel>>(
+                "api/results") ?? new List<RaceResultViewModel>();
         }
+
+        public async Task<HttpResponseMessage> CreateResultAsync(
+            RaceResultViewModel result)
+        {
+            return await _httpClient.PostAsJsonAsync("api/results", result);
+        }
+    }
+
+    public class RaceResultViewModel
+    {
+        public int ResultId { get; set; }
+        public int EnrolmentId { get; set; }
+        public TimeSpan? FinishTime { get; set; }
+        public int? Position { get; set; }
+        public string ResultStatus { get; set; } = "Finished";
+        public DateTime RecordedAt { get; set; }
     }
 }
