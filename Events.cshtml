@@ -1,0 +1,46 @@
+﻿@model IEnumerable<RaceDayMVC.Services.EnrolmentData>
+
+@{
+    ViewData["Title"] = "My Events";
+}
+
+<h2>My Registered Events</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (!Model.Any())
+{
+    <p>You have not registered for any events yet.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Event ID</th>
+                <th>Category ID</th>
+                <th>Registration Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var enrolment in Model)
+            {
+                <tr>
+                    <td>@enrolment.EventId</td>
+                    <td>@enrolment.CategoryId</td>
+                    <td>@enrolment.EnrolmentDate.ToString("dd MMM yyyy")</td>
+                    <td>@enrolment.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

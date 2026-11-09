@@ -1,0 +1,59 @@
+﻿@model RaceDayMVC.Services.RaceResultViewModel
+
+@{
+    ViewData["Title"] = "Record Race Result";
+}
+
+<div class="container mt-4">
+    <h2>Record Race Result</h2>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="EnrolmentId" class="form-label">
+                Enrolment ID
+            </label>
+            <input asp-for="EnrolmentId" type="number"
+                   class="form-control" required min="1" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FinishTime" class="form-label">
+                Finish Time
+            </label>
+            <input asp-for="FinishTime" type="time"
+                   step="1" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Position" class="form-label">
+                Finishing Position
+            </label>
+            <input asp-for="Position" type="number"
+                   class="form-control" min="1" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ResultStatus" class="form-label">
+                Result Status
+            </label>
+            <select asp-for="ResultStatus" class="form-select">
+                <option value="Finished">Finished</option>
+                <option value="DNF">Did Not Finish</option>
+                <option value="DNS">Did Not Start</option>
+                <option value="DSQ">Disqualified</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Save Result
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Cancel
+        </a>
+    </form>
+</div>

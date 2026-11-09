@@ -1,0 +1,21 @@
+﻿@model RaceDayMVC.Services.RaceEventViewModel
+
+@{
+    ViewData["Title"] = "Event Details";
+}
+
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h2>@Model.Name</h2>
+
+        <p>@Model.Description</p>
+        <p><strong>Date:</strong> @Model.EventDate.ToString("dd MMM yyyy HH:mm")</p>
+        <p><strong>Location:</strong> @Model.Location</p>
+        <p><strong>Event Type:</strong> @Model.EventType</p>
+        <p><strong>Status:</strong> @Model.Status</p>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Back to Events
+        </a>
+    </div>
+</div>

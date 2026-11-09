@@ -1,0 +1,59 @@
+﻿@model IEnumerable<RaceDayMVC.Services.RaceResultViewModel>
+
+@{
+    ViewData["Title"] = "Race Results";
+}
+
+<div class="container mt-4">
+    <h2>Race Results</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">
+            @ViewBag.Error
+        </div>
+    }
+
+    @if (Context.Session.GetString("UserRole") == "Organiser")
+    {
+        <a asp-action="Create" class="btn btn-primary mb-3">
+            Record New Result
+        </a>
+    }
+
+    @if (Model.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Enrolment ID</th>
+                    <th>Finish Time</th>
+                    <th>Position</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model)
+                {
+                    <tr>
+                        <td>@result.EnrolmentId</td>
+                        <td>@(result.FinishTime?.ToString() ?? "-")</td>
+                        <td>@(result.Position?.ToString() ?? "-")</td>
+                        <td>@result.ResultStatus</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No race results are currently available.</p>
+    }
+</div>

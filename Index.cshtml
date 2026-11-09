@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Participant Dashboard";
+}
+
+<h2>Welcome, @ViewBag.ParticipantName!</h2>
+<p>Welcome to your RaceDay participant dashboard.</p>
+
+<div class="mt-4">
+    <a asp-action="Events" class="btn btn-primary">Browse Race Events</a>
+    <a asp-action="MyEvents" class="btn btn-success">My Events</a>
+</div>

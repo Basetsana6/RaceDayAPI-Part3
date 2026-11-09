@@ -1,58 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Register";
+﻿@model IEnumerable<RaceDayMVC.Services.CategoryData>
+
+@{
+    ViewData["Title"] = "Register for Event";
+    var raceEvent = ViewBag.Event;
 }
 
-<div class="container mt-5" style="max-width: 500px;">
-    <div class="card shadow p-4">
-        <h2 class="text-center mb-4">Create RaceDay Account</h2>
+<h2>Register for @raceEvent.Name</h2>
 
-        @if (ViewBag.Error != null)
-        {
-            <div class="alert alert-danger">@ViewBag.Error</div>
-        }
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
 
-        <form asp-controller="Account" asp-action="Register" method="post">
+@if (!Model.Any())
+{
+    <p>No categories are available for this event yet.</p>
+}
+else
+{
+    <form asp-action="Register" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="eventId" value="@raceEvent.EventId" />
 
-            <div class="mb-3">
-                <label class="form-label">First Name</label>
-                <input type="text" name="firstName"
-                       class="form-control" required />
-            </div>
+        <div class="mb-3">
+            <label class="form-label">Select your race category</label>
+            <select name="categoryId" class="form-select" required>
+                <option value="">Choose a category</option>
+                @foreach (var category in Model)
+                {
+                    <option value="@category.CategoryId">
+                        @category.Name - @category.DistanceKm km
+                        (R @category.EntryFee)
+                    </option>
+                }
+            </select>
+        </div>
 
-            <div class="mb-3">
-                <label class="form-label">Last Name</label>
-                <input type="text" name="lastName"
-                       class="form-control" required />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Email Address</label>
-                <input type="email" name="email"
-                       class="form-control" required />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" name="password"
-                       class="form-control" minlength="8" required />
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Phone Number</label>
-                <input type="tel" name="phone"
-                       class="form-control" />
-            </div>
-
-            <button type="submit" class="btn btn-primary w-100">
-                Register
-            </button>
-        </form>
-
-        <p class="text-center mt-3">
-            Already have an account?
-            <a asp-controller="Account" asp-action="Login">
-                Login here
-            </a>
-        </p>
-    </div>
-</div>
+        <button type="submit" class="btn btn-success">Confirm Registration</button>
+        <a asp-action="Events" class="btn btn-secondary">Back</a>
+    </form>
+}

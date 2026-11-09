@@ -1,0 +1,69 @@
+﻿@model RaceDayMVC.Services.RaceEventViewModel
+
+@{
+    ViewData["Title"] = "Edit Event";
+}
+
+<div class="container mt-5" style="max-width: 650px;">
+    <div class="card shadow p-4">
+        <h2>Edit Race Event</h2>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+
+        <form asp-action="Edit" asp-route-id="@Model.EventId" method="post">
+            <input type="hidden" asp-for="EventId" />
+            <input type="hidden" asp-for="OrganiserId" />
+            <input type="hidden" asp-for="CreatedAt" />
+
+            <div class="mb-3">
+                <label class="form-label">Event Name</label>
+                <input asp-for="Name" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Event Date</label>
+                <input asp-for="EventDate" type="datetime-local"
+                       class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Location</label>
+                <input asp-for="Location" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Event Type</label>
+                <select asp-for="EventType" class="form-select">
+                    <option>Running</option>
+                    <option>Walking</option>
+                    <option>Cycling</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select asp-for="Status" class="form-select">
+                    <option>Upcoming</option>
+                    <option>Active</option>
+                    <option>Completed</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Update Event
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>

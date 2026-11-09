@@ -1,0 +1,81 @@
+﻿@model List<RaceDayMVC.Services.RaceEventViewModel>
+
+@{
+    ViewData["Title"] = "Race Events";
+}
+
+<div class="container mt-4">
+    <h1>Race Events</h1>
+    <p>Explore upcoming RaceDay events.</p>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    @if (Context.Session.GetString("UserRole") == "Organiser")
+    {
+        <a asp-action="Create" class="btn btn-primary mb-3">
+            Create New Event
+        </a>
+    }
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <p>@item.Description</p>
+                        <p><strong>Date:</strong> @item.EventDate.ToString("dd MMM yyyy HH:mm")</p>
+                        <p><strong>Location:</strong> @item.Location</p>
+                        <p><strong>Type:</strong> @item.EventType</p>
+                        <p><strong>Status:</strong> @item.Status</p>
+
+                        <a asp-action="Details"
+                           asp-route-id="@item.EventId"
+                           class="btn btn-outline-primary">
+                            View Details
+                        </a>
+
+                        @if (Context.Session.GetString("UserRole") == "Organiser")
+                        {
+                            <a asp-action="Edit"
+                               asp-route-id="@item.EventId"
+                               class="btn btn-warning">
+                                Edit
+                            </a>
+
+                            <form asp-action="Delete"
+                                  asp-route-id="@item.EventId"
+                                  method="post"
+                                  class="d-inline">
+                                <button type="submit"
+                                        class="btn btn-danger"
+                                        onclick="return confirm('Delete this event?')">
+                                    Delete
+                                </button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!Model.Any())
+    {
+        <p>No race events are currently available.</p>
+    }
+</div>
