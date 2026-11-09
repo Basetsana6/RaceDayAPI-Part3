@@ -1,0 +1,23 @@
+services:
+  racedayapi:
+    build:
+      context: .
+      dockerfile: RaceDayAPI/Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      AzureBlobStorage__ConnectionString: ${AZURE_STORAGE_CONNECTION_STRING}
+      AzureBlobStorage__ContainerName: raceday-images
+
+  racedaymvc:
+    build:
+      context: .
+      dockerfile: RaceDayMVC/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ApiSettings__BaseUrl: http://racedayapi:8080/
+    depends_on:
+      - racedayapi
