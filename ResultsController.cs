@@ -5,29 +5,61 @@ namespace RaceDayMVC.Controllers
 {
     public class ResultsController : Controller
     {
-        private readonly RaceDayApiService _apiService;
+        private readonly ResultsService _resultsService;
 
-        public ResultsController(RaceDayApiService apiService)
+        public ResultsController(ResultsService resultsService)
         {
-            _apiService = apiService;
+            _resultsService = resultsService;
         }
 
-        // Display results retrieved from RaceDayAPI.
+        // Display race results.
         public async Task<IActionResult> Index()
         {
             try
             {
-                ViewBag.ApiResponse =
-                    await _apiService.GetResultsAsync();
-
-                ViewBag.Error = null;
+                var results = await _resultsService.GetResultsAsync();
+                return View(results);
             }
-            catch (Exception ex)
+            catch
             {
-                ViewBag.Error = ex.Message;
+                ViewBag.Error = "Unable to retrieve race results.";
+                return View(new List<RaceResultViewModel>());
             }
+        }
+
+        // Display the result entry form.
+        [HttpGet]
+        public IActionResult Create()
+        {
+            if (HttpContext.Session.GetString("UserRole") != "Organiser")
+                return Forbid();
 
             return View();
+        }
+
+        // Save a new race result.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(RaceResultViewModel result)
+        {
+            if (HttpContext.Session.GetString("UserRole") != "Organiser")
+                return Forbid();
+
+            if (!ModelState.IsValid)
+                return View(result);
+
+            var response = await _resultsService.CreateResultAsync(result);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "Race result recorded successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            ModelState.AddModelError("",
+                "Unable to save the result. Check that the enrolment ID exists.");
+
+            return View(result);
         }
     }
 }
